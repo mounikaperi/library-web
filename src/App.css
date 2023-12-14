@@ -23,20 +23,21 @@
 }
 
 .col-image-left {
-  background-image: url("./images/books1");
+  background-image: url("./images/books2.jpg");
+  background-repeat: no-repeat;
   height: 25em;
 }
 
 .col-image-right {
-  background-image: url("./images/books2.jpg");
+  background-image: url("./images/books3.jpg");
+  background-repeat: no-repeat;
   height: 25em;
-  max-width: 90%;
+  max-width: 100%;
 }
 
 .lost-image {
-  /* background-image: url("./Images/PublicImages/image-3.jpg"); */
-  height: 25em !important;
-  width: "720";
+  background-image: url("./images/books1");
+  height: 25em;
 }
 
 .homepage-carousel-title {
