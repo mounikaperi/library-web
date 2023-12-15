@@ -22,7 +22,9 @@ export const Navbar = () => {
       </nav>
       <nav className="navbar navbar-light bg-dark">
         <div className="container-fluid">
-          <span className="navbar-brand mx-auto text-white">The information provided in this Website is intended for educational purposes only!!!</span>
+          <span className="navbar-brand text-white marquee">
+            The information provided in this Website is intended for educational purposes only!!!
+          </span>
         </div>
       </nav>
     </>

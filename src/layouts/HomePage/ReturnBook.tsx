@@ -2,18 +2,14 @@ import React from 'react'
 
 export const ReturnBook = () => {
     return (
-        <div className='col-xs-6 col-sm-6 col-md-4 col-lg-3 mb-3'>
-            <div className='text-center'>
-                    <img
-                        src={require('./../../images/LibraryIcon.jpg')}
-                        width='151'
-                        height='233'
-                        alt="book"
-                    />
-                <h6 className='mt-2'>BookTitle</h6>
-                <p>BookAuthor</p>
-                <a className='btn main-color text-white' href="#">Reserve</a>
+        <div className="card" >
+            <img src={require('./../../images/books.jpg')} className="card-img-top" alt="..." />
+            <div className="card-body">
+                <h5 className="card-title">Card title</h5>
+                <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" className="btn btn-primary">Go somewhere</a>
             </div>
         </div>
+
     );
 }

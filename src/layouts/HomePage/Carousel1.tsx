@@ -1,32 +1,32 @@
 import { ReturnBook } from "./ReturnBook";
 
-export const Carousel = () => {
+export const Carousel1 = () => {
   return (
-    <div className='container mt-5' style={{ height: 550 }}>
-      <div className='homepage-carousel-title'>
+    <>
+      <div className='homepage-carousel-title mt-5 mb-5'>
         <h3>Find your next "I stayed up too late reading" book.</h3>
       </div>
-
-      <div id='carouselExampleControls' className='carousel carousel-dark slide mt-5 
-            d-none d-lg-block' data-bs-interval='false'>
-        {/* Desktop */}
-        <div className='carousel-inner'>
-          <div className='carousel-item active'>
-            <div className='row d-flex justify-content-center align-items-center'>
+      <div id="carouselExampleControls" className="container container-fluid carousel carousel-dark slide d-none d-lg-block" data-bs-ride="carousel">
+        <div className="carousel-inner">
+          <div className="carousel-item active">
+            <div className="cards-wrapper">
+              <ReturnBook />
               <ReturnBook />
               <ReturnBook />
               <ReturnBook />
             </div>
           </div>
-          <div className='carousel-item'>
-            <div className='row d-flex justify-content-center align-items-center'>
+          <div className="carousel-item">
+            <div className="cards-wrapper">
+              <ReturnBook />
               <ReturnBook />
               <ReturnBook />
               <ReturnBook />
             </div>
           </div>
-          <div className='carousel-item'>
-            <div className='row d-flex justify-content-center align-items-center'>
+          <div className="carousel-item">
+            <div className="cards-wrapper">
+              <ReturnBook />
               <ReturnBook />
               <ReturnBook />
               <ReturnBook />
@@ -41,17 +41,11 @@ export const Carousel = () => {
           <span className="carousel-control-next-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Next</span>
         </button>
-      </div>
-
-      {/* Mobile */}
-      <div className='d-lg-none mt-3'>
-        <div className='row d-flex justify-content-center align-items-center'>
-          <ReturnBook />
-        </div>
-      </div>
+      </div >
       <div className='homepage-carousel-title mt-3'>
-        <a className='btn btn-outline-secondary btn-lg' href="#">View More</a>
+        <a className='btn btn-outline-secondary btn-lg' href='/search'>View More</a>
       </div>
-    </div>
+    </>
   );
 }
+
