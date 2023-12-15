@@ -1,6 +1,25 @@
 import { ReturnBook } from "./ReturnBook";
+import { useEffect, useState } from "react";
+import BookModel from "../../models/BookModel";
+import { fetchBooks } from "../../services/booksService";
 
 export const Carousel = () => {
+  const [books, setBooks] = useState<BookModel[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState(null);
+  useEffect(() => {
+    fetchAllAvailableBooks();
+  }, []);
+  const fetchAllAvailableBooks = async () => {
+    try {
+      const fetchedBooks = await fetchBooks();
+      setBooks(fetchedBooks);
+    } catch (error: any) {
+      setHttpError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   return (
     <div className='container mt-5' style={{ height: 550 }}>
       <div className='homepage-carousel-title'>
