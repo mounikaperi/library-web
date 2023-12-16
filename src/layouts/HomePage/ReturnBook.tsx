@@ -1,16 +1,19 @@
-export const ReturnBook = () => {
+import BookModel from "../../models/BookModel";
+
+export const ReturnBook: React.FC<{ book: BookModel }> = (props) => {
+    const bookImage = props.book.img ? props.book.img : require('../../images/books2.jpg');
     return (
         <div className='col-xs-6 col-sm-6 col-md-4 col-lg-3 mb-3'>
             <div className='text-center'>
                 <img
-                    src={require('../../images/books2.jpg')}
-                    width='450'
-                    height='250'
+                    src={bookImage}
+                    width='250'
+                    height='300'
                     alt="book"
                     className="card-img-top"
                 />
-                <h6 className='mt-2'>{"bookTitle"}</h6>
-                <p>{"BookAuthor"}</p>
+                <h6 className='mt-2'>{props.book.title}</h6>
+                <p>{props.book.author}</p>
                 <a className='btn main-color text-white' href="#">Reserve</a>
             </div>
         </div>
