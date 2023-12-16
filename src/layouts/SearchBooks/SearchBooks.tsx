@@ -3,19 +3,27 @@ import BookModel from "../../models/BookModel";
 import { fetchBooks } from "../../services/booksService";
 import { Spinner } from "../Common/Spinner";
 import { SearchSpecificBook } from "./SearchSpecificBook";
+import { Pagination } from "../Common/Pagination";
 
 export const SearchBooks = () => {
   const [books, setBooks] = useState<BookModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [booksPerPage] = useState(5);
+  const [totalAmountOfBooks, setTotalAmountOfBooks] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
   useEffect(() => {
     fetchAllAvailableBooks();
   }, []);
   const fetchAllAvailableBooks = async () => {
     try {
-      const queryParameters = 'page=0&size=5';
-      const fetchedBooks = await fetchBooks(queryParameters);
-      setBooks(fetchedBooks);
+      const queryParameters = `page=${currentPage - 1}&size=${booksPerPage}`;
+      const fetchedBookResponse = await fetchBooks(queryParameters);
+      setBooks(fetchedBookResponse.books);
+      setTotalAmountOfBooks(fetchedBookResponse.totalBooks);
+      setTotalPages(fetchedBookResponse.totalPages);
     } catch (error: any) {
       setHttpError(error.message);
     } finally {
@@ -34,6 +42,11 @@ export const SearchBooks = () => {
       </div>
     );
   }
+  const indexOfLastBook: number = currentPage * booksPerPage;
+  const indexOfFirstBook: number = indexOfLastBook - booksPerPage;
+  let lastItem = booksPerPage * currentPage <= totalAmountOfBooks ? booksPerPage * currentPage : totalAmountOfBooks;
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <div>
       <div className="container">
@@ -47,8 +60,8 @@ export const SearchBooks = () => {
             </div>
             <div className="col-4">
               <div className="dropdown">
-                <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" 
-                data-bs-toggle="dropdown" aria-expanded="false">Category</button>
+                <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                  data-bs-toggle="dropdown" aria-expanded="false">Category</button>
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                   <li><a href="#" className="dropdown-item">All</a></li>
                   <li><a href="#" className="dropdown-item">Frontend</a></li>
@@ -65,6 +78,7 @@ export const SearchBooks = () => {
           {books.map(book => (
             <SearchSpecificBook book={book} key={book.id} />
           ))}
+          {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />}
         </div>
       </div>
     </div>

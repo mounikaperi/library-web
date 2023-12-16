@@ -9,6 +9,9 @@ export const SearchSpecificBook: React.FC<{ book: BookModel }> = (props) => {
           <div className="d-none d-lg-block">
             <img src={bookImage} width="250" height="300" alt="Book" />
           </div>
+          <div className="d-lg-none d-flex justify-content-center align-items-center">
+            <img src={bookImage} width="250" height="300" alt="Book" />
+          </div>
         </div>
         <div className="col-md-7">
           <div className="card-body">
