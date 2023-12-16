@@ -15,21 +15,22 @@ export const SearchBooks = () => {
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    fetchAllAvailableBooks();
-  }, []);
-  const fetchAllAvailableBooks = async () => {
-    try {
-      const queryParameters = `page=${currentPage - 1}&size=${booksPerPage}`;
-      const fetchedBookResponse = await fetchBooks(queryParameters);
-      setBooks(fetchedBookResponse.books);
-      setTotalAmountOfBooks(fetchedBookResponse.totalBooks);
-      setTotalPages(fetchedBookResponse.totalPages);
-    } catch (error: any) {
-      setHttpError(error.message);
-    } finally {
-      setIsLoading(false);
+    const fetchAllAvailableBooks = async () => {
+      try {
+        const queryParameters = `page=${currentPage - 1}&size=${booksPerPage}`;
+        const fetchedBookResponse = await fetchBooks(queryParameters);
+        setBooks(fetchedBookResponse.books);
+        setTotalAmountOfBooks(fetchedBookResponse.totalBooks);
+        setTotalPages(fetchedBookResponse.totalPages);
+      } catch (error: any) {
+        setHttpError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+      window.scrollTo(0, 0);
     }
-  }
+    fetchAllAvailableBooks();
+  }, [currentPage]);
   if (isLoading) {
     return (
       <Spinner />
@@ -72,9 +73,9 @@ export const SearchBooks = () => {
             </div>
           </div>
           <div className="mt-3">
-            <h5>Number of Results: {22}</h5>
+            <h5>{`Number of Results: ${totalAmountOfBooks}`}</h5>
           </div>
-          <p>1 to 5 of 22 items:</p>
+          <p>{`${indexOfFirstBook + 1} to ${lastItem} of ${totalAmountOfBooks} items:`}</p>
           {books.map(book => (
             <SearchSpecificBook book={book} key={book.id} />
           ))}

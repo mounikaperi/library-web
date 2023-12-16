@@ -1,16 +1,16 @@
 export const Pagination: React.FC<{ currentPage: number, totalPages: number, paginate: any }> = (props) => {
-  const pushPageNumber = (pageNumber: any, totalPages: number) => {
+  const pushPageNumber = (pageNumber: any, totalPages: number, pageNumbers: any) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
       pageNumbers.push(pageNumber);
     }
   };
   const generatePageNumbers = (currentPage: number, totalPages: number) => {
     const pageNumbers: any = [];
-    pushPageNumber(currentPage, totalPages);
-    pushPageNumber(currentPage - 1, totalPages);
-    pushPageNumber(currentPage - 2, totalPages);
-    pushPageNumber(currentPage + 1, totalPages);
-    pushPageNumber(currentPage + 2, totalPages);
+    pushPageNumber(currentPage - 2, totalPages, pageNumbers);
+    pushPageNumber(currentPage - 1, totalPages, pageNumbers);
+    pushPageNumber(currentPage, totalPages, pageNumbers);
+    pushPageNumber(currentPage + 1, totalPages, pageNumbers);
+    pushPageNumber(currentPage + 2, totalPages, pageNumbers);
     return pageNumbers;
   };
   const pageNumbers = generatePageNumbers(props.currentPage, props.totalPages);

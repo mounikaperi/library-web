@@ -9,19 +9,19 @@ export const Carousel = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
   useEffect(() => {
+    const fetchAllAvailableBooks = async () => {
+      try {
+        const queryParameters = 'page=0&size=9';
+        const fetchedBooksResponse: any = await fetchBooks(queryParameters);
+        setBooks(fetchedBooksResponse.books);
+      } catch (error: any) {
+        setHttpError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
     fetchAllAvailableBooks();
   }, []);
-  const fetchAllAvailableBooks = async () => {
-    try {
-      const queryParameters = 'page=0&size=9';
-      const fetchedBooksResponse: any = await fetchBooks(queryParameters);
-      setBooks(fetchedBooksResponse.books);
-    } catch (error: any) {
-      setHttpError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }
   if (isLoading) {
     return (
       <Spinner />
