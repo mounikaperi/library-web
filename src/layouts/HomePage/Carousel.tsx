@@ -12,7 +12,7 @@ export const Carousel = () => {
     const fetchAllAvailableBooks = async () => {
       try {
         const queryParameters = 'page=0&size=9';
-        const fetchedBooksResponse: any = await fetchBooks(queryParameters);
+        const fetchedBooksResponse: any = await fetchBooks(queryParameters, '');
         setBooks(fetchedBooksResponse.books);
       } catch (error: any) {
         setHttpError(error.message);
