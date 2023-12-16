@@ -2,6 +2,7 @@ import { ReturnBook } from "./ReturnBook";
 import { useEffect, useState } from "react";
 import BookModel from "../../models/BookModel";
 import { fetchBooks } from "../../services/booksService";
+import { Spinner } from "../Common/Spinner";
 
 export const Carousel = () => {
   const [books, setBooks] = useState<BookModel[]>([]);
@@ -12,7 +13,8 @@ export const Carousel = () => {
   }, []);
   const fetchAllAvailableBooks = async () => {
     try {
-      const fetchedBooks = await fetchBooks();
+      const queryParameters = 'page=0&size=9';
+      const fetchedBooks = await fetchBooks(queryParameters);
       setBooks(fetchedBooks);
     } catch (error: any) {
       setHttpError(error.message);
@@ -22,9 +24,7 @@ export const Carousel = () => {
   }
   if (isLoading) {
     return (
-      <div className="container m-5">
-        <p>Loading...</p>
-      </div>
+      <Spinner />
     );
   }
   if (httpError) {

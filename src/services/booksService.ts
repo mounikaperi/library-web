@@ -1,7 +1,7 @@
 import { booksServiceUrl } from "../utils/urlConfig";
 
-export const fetchBooks = async () => {
-  const booksUrl: string = `${booksServiceUrl()}?page=0&size=9`;
+export const fetchBooks = async (queryParameters: string) => {
+  const booksUrl: string = `${booksServiceUrl()}?${queryParameters}`;
   const booksResponse = await fetch(booksUrl);
   if (!booksResponse) {
     console.log(`booksService.js: fetchBooks: calling booksServiceUrl: ${booksUrl}, response: ${booksResponse}`);
