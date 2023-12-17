@@ -19,3 +19,13 @@ export const fetchBooks = async (queryParameters: string, searchUrl: string) => 
     currentPage: booksResponseJson.page.number
   };
 }
+
+export const fetchSpecificBook = async (bookId: string) => {
+  let bookServiceUrl: string = `${booksServiceUrl()}/${bookId}`;
+  const booksResponse = await fetch(bookServiceUrl);
+  if (!booksResponse) {
+    console.log(`booksService.js: fetchBooks: calling booksServiceUrl: ${bookServiceUrl}, response: ${booksResponse}`);
+    throw new Error(`No Books Found`);
+  }
+  return booksResponse.json();
+}
