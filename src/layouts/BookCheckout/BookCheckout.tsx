@@ -3,11 +3,18 @@ import BookModel from "../../models/BookModel";
 import { fetchSpecificBook } from "../../services/booksService";
 import { StarsReview } from "../Common/StarsReview";
 import { CheckoutReviewBox } from "./CheckoutReviewBox";
+import ReviewModel from "../../models/ReviewModel";
+import { fetchReviewsForSpecificBook } from "../../services/reviewsService";
 
 export const BookCheckout = () => {
   const [book, setBook] = useState<BookModel>();
-  const [isLoading, setIsLoading] = useState(true);
-  const [httpError, setHttpError] = useState(null);
+  const [, setIsLoading] = useState(true);
+  const [, setHttpError] = useState(null);
+
+  const [, setReviews] = useState<ReviewModel[]>([]);
+  const [, setTotalStars] = useState(0);
+  const [, setIsLoadingReview] = useState(true);
+
   const bookId = (window.location.pathname).split('/')[2];
   useEffect(() => {
     const fetchBook = async () => {
@@ -21,7 +28,24 @@ export const BookCheckout = () => {
       }
     }
     fetchBook();
-  })
+  }, []);
+  useEffect(() => {
+    const fetchBookReviews = async () => {
+      try {
+        const queryStringParameters = `bookId=${bookId}`;
+        const fetchedReviews = await fetchReviewsForSpecificBook(queryStringParameters);
+        const sumofAllRatings = fetchedReviews.reviews.reduce((acc: any, review: any) => acc + review.rating, 0);
+        const averageRatingOfBook = Math.round(sumofAllRatings / fetchedReviews.totalReviews);
+        setTotalStars(+averageRatingOfBook);
+        setReviews(fetchedReviews.reviews);
+        setIsLoadingReview(false);
+      } catch (error: any) {
+        setIsLoadingReview(false);
+        setHttpError(error.message);
+      }
+    }
+    fetchBookReviews();
+  }, []);
   return (
     <div className="container d-none d-lg-block">
       <div className="row mt-5">
