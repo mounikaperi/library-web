@@ -1,0 +1,1 @@
+export const BOOK_CATEGORIES = ['fe', 'be', 'data', 'devops'];
