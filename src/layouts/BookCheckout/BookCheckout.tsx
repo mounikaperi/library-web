@@ -31,7 +31,7 @@ export const BookCheckout = () => {
             : <img src={require('./../../images/books.jpg')} width='226' height='349' alt='Book' />
           }
         </div>
-        <div className="col-4 col-md-4 container">
+        <div className="col-4 col-md-5 container">
           <div className="ml-2">
             <h2>{book?.title}</h2>
             <h5 className="text-primary">{book?.author}</h5>

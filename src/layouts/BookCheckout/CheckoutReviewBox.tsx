@@ -12,8 +12,8 @@ export const CheckoutReviewBox: React.FC<{book: BookModel | undefined, mobile: b
             : (<h4 className="text-danger">Wait List</h4>)
           }
           <div className="row">
-            <p className="col-6 lead"><b>{props.book?.copies}</b> copies</p>
-            <p className="col-6 lead"><b>{props.book?.copiesAvailable}</b> available</p>
+            <p className="col-6 lead"><b>{props.book?.copies || 0}</b> copies</p>
+            <p className="col-6 lead"><b>{props.book?.copiesAvailable || 0}</b> available</p>
           </div>
         </div>
         <Link to="/" className="btn btn-success btn-lg">Sign In</Link><hr />
