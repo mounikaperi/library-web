@@ -7,7 +7,7 @@ export const ReturnBook: React.FC<{ book: BookModel }> = (props) => {
             <div className='text-center'>
                 <img
                     src={bookImage}
-                    width='250'
+                    width='100'
                     height='300'
                     alt="book"
                     className="card-img-top"

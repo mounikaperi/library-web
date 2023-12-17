@@ -8,21 +8,23 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 function App() {
   return (
-    <>
+    <div className='d-flex flex-column min-vh-100'>
       <Navbar />
-      <Switch>
-        <Route path="/" exact>
-          <Redirect to='/home' />
-        </Route>
-        <Route path="/home" exact>
-          <HomePage />
-        </Route>
-        <Route path="/search">
-          <SearchBooks />
-        </Route>
-      </Switch>
+      <div className='flex-grow-1'>
+        <Switch>
+          <Route path="/" exact>
+            <Redirect to='/home' />
+          </Route>
+          <Route path="/home" exact>
+            <HomePage />
+          </Route>
+          <Route path="/search">
+            <SearchBooks />
+          </Route>
+        </Switch>
+      </div>
       <Footer />
-    </>
+    </div>
   );
 }
 
