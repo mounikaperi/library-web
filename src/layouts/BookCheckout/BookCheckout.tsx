@@ -14,7 +14,7 @@ export const BookCheckout = () => {
   const [, setHttpError] = useState(null);
 
   const [reviews, setReviews] = useState<ReviewModel[]>([]);
-  const [, setTotalStars] = useState(0);
+  const [totalStars, setTotalStars] = useState(0);
   const [isLoadingReview, setIsLoadingReview] = useState(true);
 
   const bookId = (window.location.pathname).split('/')[2];
@@ -68,7 +68,7 @@ export const BookCheckout = () => {
               <h2>{book?.title}</h2>
               <h5 className='text-primary'>{book?.author}</h5>
               <p className='lead'>{book?.description}</p>
-              <StarsReview rating={4.5} size={32} />
+              <StarsReview rating={totalStars} size={32} />
             </div>
           </div>
           <CheckoutReviewBox book={book} mobile={false} />
@@ -90,7 +90,7 @@ export const BookCheckout = () => {
             <h2>{book?.title}</h2>
             <h5 className='text-primary'>{book?.author}</h5>
             <p className='lead'>{book?.description}</p>
-            <StarsReview rating={4.8} size={32} />
+            <StarsReview rating={totalStars} size={32} />
           </div>
         </div>
         <CheckoutReviewBox book={book} mobile={true} />
