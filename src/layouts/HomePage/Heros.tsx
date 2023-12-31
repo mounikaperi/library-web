@@ -9,7 +9,7 @@ export const Heros = () => {
           <div className='col-4 col-md-4 container d-flex justify-content-center align-items-center'>
             <div className='ml-2'>
               <h1>What have you been reading?</h1>
-              <p className='lead'>
+              <p className='lead fs-6'>
                 The library team would love to know what you have been reading.
                 Whether it is to learn a new skill or grow within one,
                 we will be able to provide the top content for you!
@@ -23,7 +23,7 @@ export const Heros = () => {
                         justify-content-center align-items-center'>
             <div className='ml-2'>
               <h1>Our collection is always changing!</h1>
-              <p className='lead'>
+              <p className='lead fs-6'>
                 Try to check in daily as our collection is always changing!
                 We work nonstop to provide the most accurate book selection possible
                 for our students! We are diligent about our book selection

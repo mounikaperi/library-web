@@ -7,7 +7,9 @@ import { SearchBooks } from './layouts/SearchBooks/SearchBooks';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { BookCheckout } from './layouts/BookCheckout/BookCheckout';
 import { oktaConfig } from './lib/oktaConfig';
-import { OktaAuth,toRelativeUrl } from '@okta/okta-auth-js';
+import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
+import { Security, LoginCallback } from '@okta/okta-react';
+import LoginWidget from './Auth/LoginWidget';
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -21,24 +23,20 @@ function App() {
   }
   return (
     <div className='d-flex flex-column min-vh-100'>
-      <Navbar />
-      <div className='flex-grow-1'>
-        <Switch>
-          <Route path="/" exact>
-            <Redirect to='/home' />
-          </Route>
-          <Route path="/home" exact>
-            <HomePage />
-          </Route>
-          <Route path="/search">
-            <SearchBooks />
-          </Route>
-          <Route path="/checkout/:bookId">
-            <BookCheckout />
-          </Route>
-        </Switch>
-      </div>
-      <Footer />
+      <Security oktaAuth={oktaAuth} restoreOriginalUri={retoreOriginalUri} onAuthRequired={customAuthHandler}>
+        <Navbar />
+        <div className='flex-grow-1'>
+          <Switch>
+            <Route path="/" exact><Redirect to='/home' /></Route>
+            <Route path="/home" exact><HomePage /></Route>
+            <Route path="/search"><SearchBooks /></Route>
+            <Route path="/checkout/:bookId"><BookCheckout /></Route>
+            <Route path="/login" render={() => <LoginWidget config={oktaConfig} />} ></Route>
+            <Route path='/login/callback' component={LoginCallback}></Route>
+          </Switch>
+        </div>
+        <Footer />
+      </Security>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export const Navbar = () => {
       </nav>
       <nav className="navbar navbar-light bg-dark p-0">
         <div className="container-fluid">
-          <span className="navbar-brand text-white marquee">
+          <span className="navbar-brand text-white marquee fs-6">
             The information provided in this Website is intended for educational purposes only!!!
           </span>
         </div>
