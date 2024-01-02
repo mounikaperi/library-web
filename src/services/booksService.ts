@@ -41,9 +41,27 @@ export const fetchCurrentLoansCount = async (authState: any) => {
       }
     };
     const currentLoansCountResponse = await fetch(url, requestOptions);
-    if (currentLoansCountResponse.ok) {
+    if (!currentLoansCountResponse.ok) {
       throw new Error('Something went wrong');
     }
     return await currentLoansCountResponse.json();
+  }
+}
+
+export const fetchCheckedOutBook = async (authState: any, bookId: string) => {
+  if (authState?.isAuthenticated) {
+    const url = `${booksServiceUrl}/secure/ischeckedout/byuser/?bookId=${bookId}`;
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+        'Content-type': 'application/json'
+      }
+    };
+    const bookCheckedOut = await fetch(url, requestOptions);
+    if (!bookCheckedOut.ok) {
+      throw new Error('Something went wrong!!!');
+    }
+    return await bookCheckedOut.json();
   }
 }

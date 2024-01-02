@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BookModel from "../../models/BookModel";
-import { fetchCurrentLoansCount, fetchSpecificBook } from "../../services/booksService";
+import { fetchCheckedOutBook, fetchCurrentLoansCount, fetchSpecificBook } from "../../services/booksService";
 import { StarsReview } from "../Common/StarsReview";
 import { CheckoutReviewBox } from "./CheckoutReviewBox";
 import ReviewModel from "../../models/ReviewModel";
@@ -24,6 +24,9 @@ export const BookCheckout = () => {
   const [currentLoansCount, setCurrentLoansCount] = useState(0);
   const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(false);
 
+  const [isBookCheckedOut, setIsBookCheckedOut] = useState(false);
+  const [isLoadingBookCheckedOut, setIsLoadingBookCheckedOut] = useState(true);
+
   const bookId = (window.location.pathname).split('/')[2];
 
   useEffect(() => {
@@ -38,7 +41,8 @@ export const BookCheckout = () => {
       }
     }
     fetchBook();
-  }, []);
+  }, [bookId]);
+
   useEffect(() => {
     const fetchBookReviews = async () => {
       try {
@@ -55,11 +59,13 @@ export const BookCheckout = () => {
       }
     }
     fetchBookReviews();
-  }, []);
+  }, [bookId]);
+
   useEffect(() => {
     const fetchUserCurrentLoansCount = async () => {
       try {
-        await fetchCurrentLoansCount(authState);
+        const currentLoansCount = await fetchCurrentLoansCount(authState);
+        setCurrentLoansCount(currentLoansCount);
       } catch (error: any) {
         setHttpError(error.message);
       } finally {
@@ -69,7 +75,21 @@ export const BookCheckout = () => {
     fetchUserCurrentLoansCount();
   }, [authState]);
 
-  if (isLoading || isLoadingReview || isLoadingCurrentLoansCount) {
+  useEffect(() => {
+    const fetchUserCheckedOutBook = async () => {
+      try {
+        const checkedOutBook = await fetchCheckedOutBook(authState, bookId);
+        setIsBookCheckedOut(checkedOutBook);
+      } catch (error: any) {
+        setHttpError(error.message);
+      } finally {
+        setIsLoadingBookCheckedOut(false);
+      }
+    }
+    fetchUserCheckedOutBook();
+  }, [authState, bookId]);
+
+  if (isLoading || isLoadingReview || isLoadingCurrentLoansCount || isLoadingBookCheckedOut) {
     return (<Spinner />);
   }
   return (
@@ -77,11 +97,9 @@ export const BookCheckout = () => {
       <div className='container d-none d-lg-block'>
         <div className='row mt-5'>
           <div className='col-sm-2 col-md-2'>
-            {book?.img ?
-              <img src={book?.img} width='226' height='349' alt='Book' />
-              :
-              <img src={require('./../../images/books3.jpg')} width='226'
-                height='349' alt='Book' />
+            {book?.img 
+            ? <img src={book?.img} width='226' height='349' alt='Book' />
+            : <img src={require('./../../images/books3.jpg')} width='226' height='349' alt='Book' />
             }
           </div>
           <div className='col-4 col-md-4 container'>
@@ -92,18 +110,17 @@ export const BookCheckout = () => {
               <StarsReview rating={totalStars} size={32} />
             </div>
           </div>
-          <CheckoutReviewBox book={book} mobile={false} />
+          <CheckoutReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount} 
+            isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} />
         </div>
         <hr />
         <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
       </div>
       <div className='container d-lg-none mt-5'>
         <div className='d-flex justify-content-center alighn-items-center'>
-          {book?.img ?
-            <img src={book?.img} width='226' height='349' alt='Book' />
-            :
-            <img src={require('./../../images/books3.jpg')} width='226'
-              height='349' alt='Book' />
+          {book?.img 
+          ? <img src={book?.img} width='226' height='349' alt='Book' />
+          : <img src={require('./../../images/books3.jpg')} width='226' height='349' alt='Book' />
           }
         </div>
         <div className='mt-4'>
@@ -114,7 +131,8 @@ export const BookCheckout = () => {
             <StarsReview rating={totalStars} size={32} />
           </div>
         </div>
-        <CheckoutReviewBox book={book} mobile={true} />
+        <CheckoutReviewBox book={book} mobile={true} currentLoansCount={currentLoansCount}
+          isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} />
         <hr />
         <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
       </div>
