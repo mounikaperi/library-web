@@ -65,3 +65,19 @@ export const fetchCheckedOutBook = async (authState: any, bookId: string) => {
     return await bookCheckedOut.json();
   }
 }
+
+export const checkIfBookCheckedOut = async (authState: any, bookId: string) => {
+  const url=`${booksServiceUrl}/secure/checkout/bookId=${bookId}`;
+  const requestOptions = {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+      'Content-Type': 'application/json'
+    }
+  };
+  const checkoutResponse = await fetch(url, requestOptions);
+  if (!checkoutResponse.ok) {
+    throw new Error('Something went wrong');
+  }
+  return true;
+}

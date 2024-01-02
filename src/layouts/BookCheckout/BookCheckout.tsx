@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import BookModel from "../../models/BookModel";
-import { fetchCheckedOutBook, fetchCurrentLoansCount, fetchSpecificBook } from "../../services/booksService";
+import { 
+  checkIfBookCheckedOut, fetchCheckedOutBook, fetchCurrentLoansCount, fetchSpecificBook 
+} from "../../services/booksService";
 import { StarsReview } from "../Common/StarsReview";
 import { CheckoutReviewBox } from "./CheckoutReviewBox";
 import ReviewModel from "../../models/ReviewModel";
@@ -15,7 +17,7 @@ export const BookCheckout = () => {
 
   const [book, setBook] = useState<BookModel>();
   const [isLoading, setIsLoading] = useState(true);
-  const [, setHttpError] = useState(null);
+  const [httpError, setHttpError] = useState(null);
 
   const [reviews, setReviews] = useState<ReviewModel[]>([]);
   const [totalStars, setTotalStars] = useState(0);
@@ -41,7 +43,7 @@ export const BookCheckout = () => {
       }
     }
     fetchBook();
-  }, [bookId]);
+  }, [isBookCheckedOut]);
 
   useEffect(() => {
     const fetchBookReviews = async () => {
@@ -73,7 +75,7 @@ export const BookCheckout = () => {
       }
     };
     fetchUserCurrentLoansCount();
-  }, [authState]);
+  }, [authState, isBookCheckedOut]);
 
   useEffect(() => {
     const fetchUserCheckedOutBook = async () => {
@@ -92,6 +94,20 @@ export const BookCheckout = () => {
   if (isLoading || isLoadingReview || isLoadingCurrentLoansCount || isLoadingBookCheckedOut) {
     return (<Spinner />);
   }
+
+  if (httpError) {
+    return (
+      <div className="container mt-5">
+        <p>{httpError}</p>
+      </div>
+    );
+  }
+
+  async function checkoutBook() {
+    const bookCheckedOut = await checkIfBookCheckedOut(authState, bookId);
+    setIsBookCheckedOut(bookCheckedOut);
+  }
+
   return (
     <div>
       <div className='container d-none d-lg-block'>
@@ -111,7 +127,8 @@ export const BookCheckout = () => {
             </div>
           </div>
           <CheckoutReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount} 
-            isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} />
+            isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} 
+            checkoutBook={checkoutBook} />
         </div>
         <hr />
         <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
@@ -132,7 +149,7 @@ export const BookCheckout = () => {
           </div>
         </div>
         <CheckoutReviewBox book={book} mobile={true} currentLoansCount={currentLoansCount}
-          isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} />
+          isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} checkoutBook={checkoutBook}/>
         <hr />
         <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
       </div>
