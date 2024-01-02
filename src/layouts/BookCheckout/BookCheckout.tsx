@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import BookModel from "../../models/BookModel";
-import { fetchSpecificBook } from "../../services/booksService";
+import { fetchCurrentLoansCount, fetchSpecificBook } from "../../services/booksService";
 import { StarsReview } from "../Common/StarsReview";
 import { CheckoutReviewBox } from "./CheckoutReviewBox";
 import ReviewModel from "../../models/ReviewModel";
 import { fetchReviewsForSpecificBook } from "../../services/reviewsService";
 import { Spinner } from "../Common/Spinner";
 import { LatestReviews } from "./LatestReviews";
+import { useOktaAuth } from "@okta/okta-react";
 
 export const BookCheckout = () => {
+
+  const { authState } = useOktaAuth();
+
   const [book, setBook] = useState<BookModel>();
   const [isLoading, setIsLoading] = useState(true);
   const [, setHttpError] = useState(null);
@@ -17,16 +21,20 @@ export const BookCheckout = () => {
   const [totalStars, setTotalStars] = useState(0);
   const [isLoadingReview, setIsLoadingReview] = useState(true);
 
+  const [currentLoansCount, setCurrentLoansCount] = useState(0);
+  const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(false);
+
   const bookId = (window.location.pathname).split('/')[2];
+
   useEffect(() => {
     const fetchBook = async () => {
       try {
         const loadedBook: BookModel = await fetchSpecificBook(bookId);
         setBook(loadedBook);
-        setIsLoading(false);
       } catch (error: any) {
-        setIsLoading(false);
         setHttpError(error.message);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchBook();
@@ -40,15 +48,28 @@ export const BookCheckout = () => {
         const averageRatingOfBook = Math.round(sumofAllRatings / fetchedReviews.totalReviews);
         setTotalStars(+averageRatingOfBook);
         setReviews(fetchedReviews.reviews);
-        setIsLoadingReview(false);
       } catch (error: any) {
-        setIsLoadingReview(false);
         setHttpError(error.message);
+      } finally {
+        setIsLoadingReview(false);
       }
     }
     fetchBookReviews();
   }, []);
-  if (isLoading || isLoadingReview) {
+  useEffect(() => {
+    const fetchUserCurrentLoansCount = async () => {
+      try {
+        await fetchCurrentLoansCount(authState);
+      } catch (error: any) {
+        setHttpError(error.message);
+      } finally {
+        setIsLoadingCurrentLoansCount(false);
+      }
+    };
+    fetchUserCurrentLoansCount();
+  }, [authState]);
+
+  if (isLoading || isLoadingReview || isLoadingCurrentLoansCount) {
     return (<Spinner />);
   }
   return (

@@ -29,3 +29,21 @@ export const fetchSpecificBook = async (bookId: string) => {
   }
   return booksResponse.json();
 }
+
+export const fetchCurrentLoansCount = async (authState: any) => {
+  if (authState?.isAuthenticated) {
+    const url = `${booksServiceUrl}/secure/currentloans/count`;
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    };
+    const currentLoansCountResponse = await fetch(url, requestOptions);
+    if (currentLoansCountResponse.ok) {
+      throw new Error('Something went wrong');
+    }
+    return await currentLoansCountResponse.json();
+  }
+}
