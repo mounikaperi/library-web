@@ -16,3 +16,21 @@ export const fetchReviewsForSpecificBook = async (queryParameters: string) => {
     currentPage: reviewsResponseJson.page.number
   }; 
 }
+
+export const fetchUserReviewsForSpecificBook = async (authState: any, bookId: string) => {
+  if (authState?.isAuthenticated) {
+    const url = `${reviewsServiceUrl}/secure/user/book?bookId=${bookId}`;
+    const requestOptions = {
+      method:  'GET',
+      headers: {
+        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    };
+    const userReview = await fetch(url, requestOptions);
+    if (!userReview.ok) {
+      throw new Error('Something went wrong');
+    }
+    return await userReview.json();
+  }
+}

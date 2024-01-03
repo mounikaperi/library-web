@@ -6,7 +6,7 @@ import {
 import { StarsReview } from "../Common/StarsReview";
 import { CheckoutReviewBox } from "./CheckoutReviewBox";
 import ReviewModel from "../../models/ReviewModel";
-import { fetchReviewsForSpecificBook } from "../../services/reviewsService";
+import { fetchReviewsForSpecificBook, fetchUserReviewsForSpecificBook } from "../../services/reviewsService";
 import { Spinner } from "../Common/Spinner";
 import { LatestReviews } from "./LatestReviews";
 import { useOktaAuth } from "@okta/okta-react";
@@ -22,6 +22,9 @@ export const BookCheckout = () => {
   const [reviews, setReviews] = useState<ReviewModel[]>([]);
   const [totalStars, setTotalStars] = useState(0);
   const [isLoadingReview, setIsLoadingReview] = useState(true);
+
+  const [isReviewLeft, setIsReviewLeft] = useState(false);
+  const [isLoadingUserReview, setIsLoadingUserReview] = useState(true);
 
   const [currentLoansCount, setCurrentLoansCount] = useState(0);
   const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(false);
@@ -43,7 +46,7 @@ export const BookCheckout = () => {
       }
     }
     fetchBook();
-  }, [isBookCheckedOut]);
+  }, [isBookCheckedOut, bookId]);
 
   useEffect(() => {
     const fetchBookReviews = async () => {
@@ -61,7 +64,21 @@ export const BookCheckout = () => {
       }
     }
     fetchBookReviews();
-  }, [bookId]);
+  }, [isReviewLeft, bookId]);
+
+  useEffect(() => {
+    const fetchBookReviews = async () => {
+      try {
+        const userReviewResponseJson = await fetchUserReviewsForSpecificBook(authState, bookId);
+        setIsReviewLeft(userReviewResponseJson);
+      } catch (error: any) {
+        setHttpError(error.message);
+      } finally {
+        setIsLoadingUserReview(false);
+      }
+    }
+    fetchBookReviews();
+  }, [authState, bookId])
 
   useEffect(() => {
     const fetchUserCurrentLoansCount = async () => {
@@ -91,7 +108,7 @@ export const BookCheckout = () => {
     fetchUserCheckedOutBook();
   }, [authState, bookId]);
 
-  if (isLoading || isLoadingReview || isLoadingCurrentLoansCount || isLoadingBookCheckedOut) {
+  if (isLoading || isLoadingReview || isLoadingCurrentLoansCount || isLoadingBookCheckedOut || isLoadingUserReview) {
     return (<Spinner />);
   }
 
@@ -128,7 +145,7 @@ export const BookCheckout = () => {
           </div>
           <CheckoutReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount} 
             isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} 
-            checkoutBook={checkoutBook} />
+            checkoutBook={checkoutBook} isReviewLeft={isReviewLeft}/>
         </div>
         <hr />
         <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
@@ -149,7 +166,8 @@ export const BookCheckout = () => {
           </div>
         </div>
         <CheckoutReviewBox book={book} mobile={true} currentLoansCount={currentLoansCount}
-          isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} checkoutBook={checkoutBook}/>
+          isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} 
+          checkoutBook={checkoutBook} isReviewLeft={isReviewLeft}/>
         <hr />
         <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
       </div>
