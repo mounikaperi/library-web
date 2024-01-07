@@ -6,10 +6,11 @@ import {
 import { StarsReview } from "../Common/StarsReview";
 import { CheckoutReviewBox } from "./CheckoutReviewBox";
 import ReviewModel from "../../models/ReviewModel";
-import { fetchReviewsForSpecificBook, fetchUserReviewsForSpecificBook } from "../../services/reviewsService";
+import { fetchReviewsForSpecificBook, fetchUserReviewsForSpecificBook, submitReviewForSpecificBook } from "../../services/reviewsService";
 import { Spinner } from "../Common/Spinner";
 import { LatestReviews } from "./LatestReviews";
 import { useOktaAuth } from "@okta/okta-react";
+import ReviewRequestModel from "../../models/ReviewRequestModel";
 
 export const BookCheckout = () => {
 
@@ -125,6 +126,16 @@ export const BookCheckout = () => {
     setIsBookCheckedOut(bookCheckedOut);
   }
 
+  async function submitReview(starInput: number, reviewDescription:string) {
+    let bookId: number = 0;
+    if (book?.id) {
+      bookId = book.id;
+    }
+    const reviewRequestModel = new ReviewRequestModel(starInput, bookId, reviewDescription);
+    await submitReviewForSpecificBook(authState, reviewRequestModel);
+    setIsReviewLeft(true);
+  }
+
   return (
     <div>
       <div className='container d-none d-lg-block'>
@@ -145,7 +156,7 @@ export const BookCheckout = () => {
           </div>
           <CheckoutReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount} 
             isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} 
-            checkoutBook={checkoutBook} isReviewLeft={isReviewLeft}/>
+            checkoutBook={checkoutBook} isReviewLeft={isReviewLeft} submitReview={submitReview}/>
         </div>
         <hr />
         <LatestReviews reviews={reviews} bookId={book?.id} mobile={false} />
@@ -167,7 +178,7 @@ export const BookCheckout = () => {
         </div>
         <CheckoutReviewBox book={book} mobile={true} currentLoansCount={currentLoansCount}
           isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} 
-          checkoutBook={checkoutBook} isReviewLeft={isReviewLeft}/>
+          checkoutBook={checkoutBook} isReviewLeft={isReviewLeft} submitReview={submitReview}/>
         <hr />
         <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
       </div>

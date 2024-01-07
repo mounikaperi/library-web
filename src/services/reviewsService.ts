@@ -34,3 +34,20 @@ export const fetchUserReviewsForSpecificBook = async (authState: any, bookId: st
     return await userReview.json();
   }
 }
+
+export const submitReviewForSpecificBook = async (authState: any, inputModel: any) => {
+  const url = `${reviewsServiceUrl}/secure`;
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(inputModel)
+  };
+  const reponseAfterSubmitingReview = await fetch(url, requestOptions);
+  if (!reponseAfterSubmitingReview.ok) {
+    throw new Error('Something Went Wrong!!');
+  }
+  return reponseAfterSubmitingReview;
+}
