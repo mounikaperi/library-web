@@ -1,16 +1,17 @@
 import React from 'react';
 import './App.css';
-import { HomePage } from './layouts/HomePage/HomePage';
-import { Navbar } from './layouts/NavBarAndFooter/Navbar';
-import { Footer } from './layouts/NavBarAndFooter/Footer';
-import { SearchBooks } from './layouts/SearchBooks/SearchBooks';
+import { HomePage } from './components/HomePage/HomePage';
+import { Navbar } from './components/NavBarAndFooter/Navbar';
+import { Footer } from './components/NavBarAndFooter/Footer';
+import { SearchBooks } from './components/SearchBooks/SearchBooks';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
-import { BookCheckout } from './layouts/BookCheckout/BookCheckout';
+import { BookCheckout } from './components/BookCheckout/BookCheckout';
+import { BookShelf } from './components/shelfPage/BookShelf';
 import { oktaConfig } from './lib/oktaConfig';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
-import { Security, LoginCallback } from '@okta/okta-react';
+import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
 import LoginWidget from './Auth/LoginWidget';
-import ReviewListPage from './layouts/BookCheckout/ReviewListPage';
+import ReviewListPage from './components/BookCheckout/ReviewListPage';
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -35,6 +36,7 @@ function App() {
             <Route path="/checkout/:bookId"><BookCheckout /></Route>
             <Route path="/login" render={() => <LoginWidget config={oktaConfig} />} ></Route>
             <Route path='/login/callback' component={LoginCallback}></Route>
+            <SecureRoute path='/shelf'><BookShelf /></SecureRoute>
           </Switch>
         </div>
         <Footer />
