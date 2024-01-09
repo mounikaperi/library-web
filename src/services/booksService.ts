@@ -99,3 +99,19 @@ export const fetchCurrentLoans = async (authState: any) => {
     return await shelfCurrentLoansResponse.json();
   }
 }
+
+export const returnBookSpecificToUser = async (authState: any, bookId: string) => {
+  const url = `${booksServiceUrl()}/secure/return?bookId=${bookId}`;
+  const requestOptions = {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+      'Content-Type': 'application/json'
+    }
+  };
+  const returnBookResponse = await fetch(url, requestOptions);
+  if (!returnBookResponse.ok) {
+    throw new Error('Something went wrong');
+  }
+  return returnBookResponse;
+}
