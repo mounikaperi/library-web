@@ -81,3 +81,21 @@ export const checkIfBookCheckedOut = async (authState: any, bookId: string) => {
   }
   return true;
 }
+
+export const fetchCurrentLoans = async (authState: any) => {
+  if (authState?.isAuthenticated) {
+    const url = `${booksServiceUrl}/secure/currentloans`;
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    };
+    const shelfCurrentLoansResponse = await fetch(url, requestOptions);
+    if (!shelfCurrentLoansResponse.ok) {
+      throw new Error('Something went wrong!!');
+    }
+    return await shelfCurrentLoansResponse.json();
+  }
+}
