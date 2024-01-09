@@ -1,7 +1,7 @@
 import { useOktaAuth } from '@okta/okta-react'
 import React, { useEffect, useState } from 'react'
 import ShelfCurrentLoans from '../../models/ShelfCurrentLoans';
-import { fetchCurrentLoans, returnBookSpecificToUser } from '../../services/booksService';
+import { fetchCurrentLoans, renewLoanForSpecificBook, returnBookSpecificToUser } from '../../services/booksService';
 import { Spinner } from '../Common/Spinner';
 import { Link } from 'react-router-dom';
 import { LoansModal } from './LoansModal';
@@ -45,7 +45,12 @@ function Loans() {
   }
 
   async function returnBook(bookId: string) {
-    await returnBookSpecificToUser  (authState, bookId);
+    await returnBookSpecificToUser(authState, bookId);
+    setCheckout(!checkout);
+  }
+
+  async function renewLoan(bookId: string) {
+    await renewLoanForSpecificBook(authState, bookId);
     setCheckout(!checkout);
   }
   
@@ -102,7 +107,7 @@ function Loans() {
                     </div>
                   </div>
                   <hr />
-                  <LoansModal shelfCurrentLoan={shelfCurrentLoan} mobile={false} returnBook={returnBook} />
+                  <LoansModal shelfCurrentLoan={shelfCurrentLoan} mobile={false} returnBook={returnBook} renewLoan={renewLoan}/>
                 </div>
               ))
             }
@@ -163,7 +168,7 @@ function Loans() {
                       </div>
                     </div>
                   <hr />
-                  <LoansModal shelfCurrentLoan={shelfCurrentLoan} mobile={true} returnBook={returnBook}/>
+                  <LoansModal shelfCurrentLoan={shelfCurrentLoan} mobile={true} returnBook={returnBook} renewLoan={renewLoan}/>
                 </div>
               ))
             }

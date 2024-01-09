@@ -115,3 +115,19 @@ export const returnBookSpecificToUser = async (authState: any, bookId: string) =
   }
   return returnBookResponse;
 }
+
+export const renewLoanForSpecificBook = async (authState: any, bookId: string) => {
+  const url = `${booksServiceUrl()}/secure/renew/loan?bookId=${bookId}`;
+  const requestOptions = {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+      'Content-Type': 'application/json'
+    }
+  };
+  const renewBookResponse = await fetch(url, requestOptions);
+  if (!renewBookResponse.ok) {
+    throw new Error('Something went wrong');
+  }
+  return renewBookResponse;
+}
