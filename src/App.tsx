@@ -12,7 +12,7 @@ import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
 import { Security, LoginCallback, SecureRoute } from '@okta/okta-react';
 import LoginWidget from './Auth/LoginWidget';
 import ReviewListPage from './components/BookCheckout/ReviewListPage';
-import { MessagesPage } from './components/messages/MessagesPage';
+import { MessagesPage } from './components/Messages/MessagesPage';
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
