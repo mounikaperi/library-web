@@ -19,3 +19,21 @@ export const submitNewQuestion = async (authState: any, title:string, question:s
     return submitNewQuestionResponse;
   }
 }
+
+export const fetchAllMessagesOfUser = async (authState: any, currentPage: number, messagesPerPage: number) => {
+  if (authState?.isAuthenticated) {
+    const url = `${messagesServiceUrl()}/search/findByUserEmail?userEmail=${authState?.accessToken?.claims.sub}&page=${currentPage-1}&size=${messagesPerPage}`;
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    };
+    const messagesResponse = await fetch(url, requestOptions);
+    if (!messagesResponse.ok) {
+      throw new Error('Something went wrong!!!');
+    }
+    return await messagesResponse.json();
+  }
+}
