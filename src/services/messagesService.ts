@@ -1,3 +1,4 @@
+import AdminMessageRequest from "../models/AdminMessageRequest";
 import { messagesServiceUrl } from "../utils/urlConfig"
 
 export const submitNewQuestion = async (authState: any, title:string, question:string) => {
@@ -53,5 +54,24 @@ export const fetchAdminMessages = async (authState: any, currentPage: number, me
       throw new Error('Something went wrong!!!');
     }
     return await messagesResponse.json();
+  }
+}
+
+export const submitResponseToQuestionPostedByUser = async (authState: any, messageId: number, response: string) => {
+  const url = `${messagesServiceUrl()}/secure/admin/message`;
+  if (authState?.isAuthenticated && messageId !=null && response !==null ) {
+    const messageAdminRequestModel: AdminMessageRequest = new AdminMessageRequest(messageId, response);
+    const requestOptions = {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(messageAdminRequestModel)
+    };
+    const messageAdminRequestModelResponse = await fetch(url, requestOptions);
+    if (!messageAdminRequestModelResponse.ok) {
+      throw new Error(`Something went wrong!!!`);
+    }
   }
 }

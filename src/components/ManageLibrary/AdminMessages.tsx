@@ -1,8 +1,9 @@
 import { useOktaAuth } from "@okta/okta-react";
 import { useEffect, useState } from "react";
 import { Spinner } from "../Common/Spinner";
-import { fetchAdminMessages } from "../../services/messagesService";
+import { fetchAdminMessages, submitResponseToQuestionPostedByUser } from "../../services/messagesService";
 import { Pagination } from "../Common/Pagination";
+import { AdminMessage } from "./AdminMessage";
 
 export const AdminMessages = () => {
 
@@ -16,6 +17,8 @@ export const AdminMessages = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+
+  const [ isResponseSent, setIsResponseSent ] = useState(false);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -31,7 +34,7 @@ export const AdminMessages = () => {
     }
     fetchMessages();
     window.scrollTo(0, 0);
-  }, [authState, currentPage]);
+  }, [authState, currentPage, isResponseSent]);
 
   if (isLoadingMessages) {
     return (<Spinner />)
@@ -45,6 +48,11 @@ export const AdminMessages = () => {
     )
   }
 
+  async function submitResponseToQuestion (id: number, response:string) {
+    await submitResponseToQuestionPostedByUser(authState, id, response);
+    setIsResponseSent(!isResponseSent)
+  }
+
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
@@ -56,7 +64,7 @@ export const AdminMessages = () => {
             <h5>Pending 0/4:</h5>
             {
               messages.map((message, id) => (
-                <p key={id}>Questions that need a response</p>
+                <AdminMessage message={message} key={message.id} submitResponseToQuestion={submitResponseToQuestion}/>
               ))
             }
           </>
