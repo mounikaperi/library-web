@@ -1,4 +1,4 @@
-class AdminBookRequest {
+class AddBookRequest {
   title: string;
   author: string;
   description: string;
@@ -16,4 +16,4 @@ class AdminBookRequest {
   }
 }
 
-export default AdminBookRequest;
+export default AddBookRequest;
