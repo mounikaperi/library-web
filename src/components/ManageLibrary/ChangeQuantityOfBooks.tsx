@@ -3,6 +3,7 @@ import BookModel from "../../models/BookModel"
 import { fetchBooks } from "../../services/booksService";
 import { Spinner } from "../Common/Spinner";
 import { Pagination } from "../Common/Pagination";
+import { ChangeQuantityOfSpecificBook } from "./ChangeQuantityOfSpecificBook";
 
 export const ChangeQuantityOfBooks = () => {
 
@@ -64,7 +65,7 @@ export const ChangeQuantityOfBooks = () => {
               { indexOfFirstBook + 1} to {lastItem} of {totalAmountOfBooks} items:
             </p>
             {
-              books.map(book => (<p>Display different quantity of books</p>))
+              books.map(book => ( <ChangeQuantityOfSpecificBook book={book} key={book.id} />))
             }
           </>
         :
