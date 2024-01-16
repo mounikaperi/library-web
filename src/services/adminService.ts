@@ -51,3 +51,18 @@ export const decreaseQuantityOfBook = async (authState: any, bookId: number) => 
     throw new Error('Something went wrong');
   }
 }
+
+export const deleteSpecificBook = async (authState: any, bookId: number) => {
+  const url = `${adminServiceUrl()}/secure/delete/book?bookId=${bookId}`;
+  const requestOptions = {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+      'Content-Type': 'application/json'
+    }
+  };
+  const deleteResponse = await fetch(url, requestOptions);
+  if (!deleteResponse.ok) {
+    throw new Error('Something went wrong');
+  }
+}

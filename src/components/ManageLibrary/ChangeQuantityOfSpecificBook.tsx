@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import BookModel from "../../models/BookModel";
 import { useOktaAuth } from "@okta/okta-react";
-import { decreaseQuantityOfBook, increaseQuantityOfBook } from "../../services/adminService";
+import { decreaseQuantityOfBook, deleteSpecificBook, increaseQuantityOfBook } from "../../services/adminService";
 
-export const ChangeQuantityOfSpecificBook: React.FC<{ book: BookModel }> = (props, key) => {
+export const ChangeQuantityOfSpecificBook: React.FC<{ book: BookModel, deleteBook: () => void }> = (props, key) => {
 
   const { authState } = useOktaAuth();
   const [quantity, setQuantity] = useState<number>(0);
@@ -27,6 +27,11 @@ export const ChangeQuantityOfSpecificBook: React.FC<{ book: BookModel }> = (prop
     await decreaseQuantityOfBook(authState, props.book?.id)
     setQuantity(quantity - 1);
     setRemaining(remaining - 1);
+  }
+
+  async function deleteBook() {
+    await deleteSpecificBook(authState, props.book?.id);
+    props.deleteBook();
   }
 
   return (
@@ -63,7 +68,7 @@ export const ChangeQuantityOfSpecificBook: React.FC<{ book: BookModel }> = (prop
         </div>
         <div className="mt-3 col-md-1">
           <div className="d-flex justify-content-start">
-            <button className="m-1 btn btn-md btn-danger">Delete</button>
+            <button className="m-1 btn btn-md btn-danger" onClick={deleteBook}>Delete</button>
           </div>
         </div>
         <button className="m1 btn btn-md main-color text-white" onClick={increaseQuantity}>Add Quantity</button>
