@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import BookModel from "../../models/BookModel";
+import { useOktaAuth } from "@okta/okta-react";
+import { decreaseQuantityOfBook, increaseQuantityOfBook } from "../../services/adminService";
 
 export const ChangeQuantityOfSpecificBook: React.FC<{ book: BookModel }> = (props, key) => {
 
+  const { authState } = useOktaAuth();
   const [quantity, setQuantity] = useState<number>(0);
   const [remaining, setRemaining] = useState<number>(0);
 
@@ -12,7 +15,19 @@ export const ChangeQuantityOfSpecificBook: React.FC<{ book: BookModel }> = (prop
       props.book.copiesAvailable ? setRemaining(props.book.copiesAvailable) : setRemaining(0);
     };
     fetchBookInState();
-  }, []);
+  }, [props.book.copies, props.book.copiesAvailable]);
+
+  async function increaseQuantity() {
+    await increaseQuantityOfBook(authState, props.book?.id)
+    setQuantity(quantity + 1);
+    setRemaining(remaining + 1);
+  }
+
+  async function decreaseQuantity() {
+    await decreaseQuantityOfBook(authState, props.book?.id)
+    setQuantity(quantity - 1);
+    setRemaining(remaining - 1);
+  }
 
   return (
     <div className="card mt-3 shadow p-3 mb-3 bg-body rounded">
@@ -51,8 +66,8 @@ export const ChangeQuantityOfSpecificBook: React.FC<{ book: BookModel }> = (prop
             <button className="m-1 btn btn-md btn-danger">Delete</button>
           </div>
         </div>
-        <button className="m1 btn btn-md main-color text-white">Add Quantity</button>
-        <button className="m1 btn btn-md btn-warning">Decrease Quantity</button>
+        <button className="m1 btn btn-md main-color text-white" onClick={increaseQuantity}>Add Quantity</button>
+        <button className="m1 btn btn-md btn-warning" onClick={decreaseQuantity}>Decrease Quantity</button>
       </div>
     </div>
   );
